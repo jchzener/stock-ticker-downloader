@@ -29,21 +29,32 @@ class StockTickerDownloader:
         """
         self.output_dir = Path(output_dir)
         self.session = requests.Session()
+
+        default_user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        )
+
         self.session.headers.update(
             {
-                "User-Agent": user_agent
-                or "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:85.0) Gecko/20100101 Firefox/85.0"
+                "User-Agent": user_agent or default_user_agent,
+                "Accept": "application/json, text/plain, */*",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive",
+                "Referer": "https://www.nasdaq.com/",
             }
         )
         self.setup_logging()
 
-        # configure NYSE and NASDAQ exchange parameters
+        # configure NYSE and NASDAQ exchange parameters, limit high to get all tickers
         self.exchanges = [
             ExchangeConfig(
-                "nasdaq", {"exchange": "nasdaq", "limit": "3000", "offset": "0"}
+                "nasdaq", {"exchange": "nasdaq", "limit": "5000", "offset": "0"}
             ),
             ExchangeConfig(
-                "nyse", {"exchange": "nyse", "limit": "3000", "offset": "0"}
+                "nyse", {"exchange": "nyse", "limit": "5000", "offset": "0"}
             ),
         ]
 
