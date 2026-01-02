@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Optional
 
 @dataclass
 class ExchangeConfig:
@@ -11,5 +11,5 @@ class StockTickerDownloader:
     """
     Optimized stock ticker downloader that fetches and processes stock data from NASDAQ API
     """
-    def __init__(self):
+    def __init__(self, output_dir: str="active_tickers", user_agent: Optional[str]=None):
 
