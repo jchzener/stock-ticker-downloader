@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+import logging
+from logging import handlers
+from os import mkdir
 from pathlib import Path
 from typing import Dict, Optional
 import requests
@@ -59,4 +62,24 @@ class StockTickerDownloader:
         ]
 
     def setup_logging(self):
-        pass
+        """Configure logging for the downloader"""
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.FileHandler("stock_downloader.log"),
+                logging.StreamHandler(),
+            ],
+        )
+        self.logger = logging.getLogger(__name__)
+
+    def create_directories(self) -> None:
+        """Create output directories for each exchange and combined data"""
+        try:
+            for exchange in self.exchanges:
+                (self.output_dir / exchange.name).mkdir(parents=True, exist_ok=True)
+                (self.output_dir / "all").mkdir(parents=True, exist_ok=True)
+                self.logger.info(f"Created output directories under {self.output_dir}")
+        except Exception as e:
+            self.logger.error(f"Failed to create directories: {e}")
+            raise
