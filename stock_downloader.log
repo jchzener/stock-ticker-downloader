@@ -1,0 +1,51 @@
+2026-01-03 23:17:41,141 - INFO - Created output directories under stock_data
+2026-01-03 23:17:41,141 - INFO - Created output directories under stock_data
+2026-01-03 23:17:41,141 - ERROR - Critical error in run method: name 'ThreadPoolExecutor' is not defined
+2026-01-03 23:18:32,017 - INFO - Created output directories under stock_data
+2026-01-03 23:18:32,017 - INFO - Created output directories under stock_data
+2026-01-03 23:18:32,017 - INFO - Fetching data for nasdaq with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nasdaq'}
+2026-01-03 23:18:32,017 - INFO - Fetching data for nyse with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nyse'}
+2026-01-03 23:18:32,444 - INFO - Successfully fetched 4025 tickers for nasdaq
+2026-01-03 23:18:32,445 - ERROR - Failed to save files for nasdaq: 'StockTickerDownloader' object has no attribute 'extract_symbols'
+2026-01-03 23:18:32,445 - ERROR - Error processing nasdaq: 'StockTickerDownloader' object has no attribute 'extract_symbols'
+2026-01-03 23:18:32,446 - WARNING - Failed to process nasdaq
+2026-01-03 23:18:32,607 - INFO - Successfully fetched 2720 tickers for nyse
+2026-01-03 23:18:32,607 - ERROR - Failed to save files for nyse: 'StockTickerDownloader' object has no attribute 'extract_symbols'
+2026-01-03 23:18:32,608 - ERROR - Error processing nyse: 'StockTickerDownloader' object has no attribute 'extract_symbols'
+2026-01-03 23:18:32,608 - WARNING - Failed to process nyse
+2026-01-03 23:18:32,608 - INFO - Successfully processed 0/2 exchanges
+2026-01-03 23:18:32,609 - ERROR - No exchanges were processed successfully
+2026-01-03 23:20:26,617 - INFO - Created output directories under stock_data
+2026-01-03 23:20:26,617 - INFO - Created output directories under stock_data
+2026-01-03 23:20:26,617 - INFO - Fetching data for nasdaq with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nasdaq'}
+2026-01-03 23:20:26,617 - INFO - Fetching data for nyse with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nyse'}
+2026-01-03 23:20:27,003 - INFO - Successfully fetched 4025 tickers for nasdaq
+2026-01-03 23:20:27,004 - ERROR - Failed to save files for nasdaq: name 'data' is not defined
+2026-01-03 23:20:27,004 - ERROR - Error processing nasdaq: name 'data' is not defined
+2026-01-03 23:20:27,005 - WARNING - Failed to process nasdaq
+2026-01-03 23:20:27,144 - INFO - Successfully fetched 2720 tickers for nyse
+2026-01-03 23:20:27,145 - ERROR - Failed to save files for nyse: name 'data' is not defined
+2026-01-03 23:20:27,145 - ERROR - Error processing nyse: name 'data' is not defined
+2026-01-03 23:20:27,146 - WARNING - Failed to process nyse
+2026-01-03 23:20:27,146 - INFO - Successfully processed 0/2 exchanges
+2026-01-03 23:20:27,146 - ERROR - No exchanges were processed successfully
+2026-01-03 23:23:38,674 - INFO - Created output directories under stock_data
+2026-01-03 23:23:38,675 - INFO - Created output directories under stock_data
+2026-01-03 23:23:38,675 - INFO - Fetching data for nasdaq with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nasdaq'}
+2026-01-03 23:23:38,675 - INFO - Fetching data for nyse with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nyse'}
+2026-01-03 23:23:39,255 - INFO - Successfully fetched 2720 tickers for nyse
+2026-01-03 23:23:39,297 - INFO - Successfully fetched 4025 tickers for nasdaq
+2026-01-03 23:23:39,328 - INFO - Saved 0 symbols for nyse
+2026-01-03 23:23:39,368 - INFO - Saved 0 symbols for nasdaq
+2026-01-03 23:23:39,369 - INFO - Successfully processed 2/2 exchanges
+2026-01-03 23:23:39,369 - INFO - Combined 0 unique symbols from all exchanges
+2026-01-03 23:25:45,480 - INFO - Created output directories under stock_data
+2026-01-03 23:25:45,480 - INFO - Created output directories under stock_data
+2026-01-03 23:25:45,480 - INFO - Fetching data for nasdaq with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nasdaq'}
+2026-01-03 23:25:45,481 - INFO - Fetching data for nyse with params: {'tableonly': 'true', 'download': 'true', 'exchange': 'nyse'}
+2026-01-03 23:25:45,820 - INFO - Successfully fetched 4025 tickers for nasdaq
+2026-01-03 23:25:45,879 - INFO - Saved 4025 symbols for nasdaq
+2026-01-03 23:25:45,963 - INFO - Successfully fetched 2720 tickers for nyse
+2026-01-03 23:25:46,004 - INFO - Saved 2720 symbols for nyse
+2026-01-03 23:25:46,005 - INFO - Successfully processed 2/2 exchanges
+2026-01-03 23:25:46,010 - INFO - Combined 6745 unique symbols from all exchanges
