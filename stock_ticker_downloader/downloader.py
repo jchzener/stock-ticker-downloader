@@ -8,14 +8,6 @@ from typing import Dict, Optional
 import requests
 
 
-@dataclass
-class ExchangeConfig:
-    """Configuration for stock exchange data retrieval"""
-
-    name: str
-    api_params: Dict[str, str]
-
-
 class StockTickerDownloader:
     """
     Optimized stock ticker downloader that fetches and processes stock data from NASDAQ API
@@ -54,12 +46,14 @@ class StockTickerDownloader:
 
         # configure NYSE and NASDAQ exchange parameters, limit high to get all tickers
         self.exchanges = [
-            ExchangeConfig(
-                "nasdaq", {"exchange": "nasdaq", "limit": "5000", "offset": "0"}
-            ),
-            ExchangeConfig(
-                "nyse", {"exchange": "nyse", "limit": "5000", "offset": "0"}
-            ),
+            {
+                "name": "nasdaq",
+                "api_params": {"exchange": "nasdaq", "limit": "5000", "offset": "0"},
+            },
+            {
+                "name": "nyse",
+                "api_params": {"exchange": "nyse", "limit": "5000", "offset": "0"},
+            },
         ]
 
     def setup_logging(self):
