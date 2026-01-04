@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import json
 import logging
 from logging import handlers
 from os import mkdir
@@ -83,3 +84,41 @@ class StockTickerDownloader:
         except Exception as e:
             self.logger.error(f"Failed to create directories: {e}")
             raise
+
+    def fetch_exchange_data(self, exchange_config: ExchangeConfig) -> Optional[Dict]:
+        """
+        Fetch stock data for a specific exchange.
+
+        Args:
+            exchange_config: Exchange configuration containing name and API parameters
+
+        Returns:
+            JSON response data or None if request fails
+        """
+        try:
+            # Prepare API parameters
+            params = {
+                "tableonly": "true",
+                "download": "true",
+                **exchange_config.api_params,
+            }
+
+            # Make API request
+            response = self.session.get(
+                "https://api.nasdaq.com/api/screener/stocks", params=params, timeout=30
+            )
+            response.raise_for_status()  # Raises an HTTPError for bad responses
+
+            data = response.json()
+            self.logger.info(
+                f"Successfully fetched {len(data.get('data', {}).get('rows', []))} "
+                f"tickers for {exchange_config.name}"
+            )
+            return data
+
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"Failed to fetch data for {exchange_config.name}: {e}")
+            return None
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Invalid JSON response for {exchange_config.name}: {e}")
+            return None
