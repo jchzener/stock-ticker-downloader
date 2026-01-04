@@ -32,3 +32,9 @@ class StockTickersDownloader:
 
         # logging
         self._setup_logging()
+
+    def _setup_logging(self):
+        logging.basicConfig(
+            level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+        )
+        self.logger = logging.Logger(__name__)
