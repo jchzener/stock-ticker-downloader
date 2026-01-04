@@ -38,3 +38,7 @@ class StockTickersDownloader:
             level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
         )
         self.logger = logging.Logger(__name__)
+
+    def _create_dirs(self):
+        for exchange in self.exchanges + ["all"]:
+            (self.output_dir / exchange).mkdir(parents=True, exist_ok=True)
