@@ -45,16 +45,7 @@ class StockTickerDownloader:
         self.setup_logging()
 
         # configure NYSE and NASDAQ exchange parameters, limit high to get all tickers
-        self.exchanges = [
-            {
-                "name": "nasdaq",
-                "api_params": {"exchange": "nasdaq", "limit": "5000", "offset": "0"},
-            },
-            {
-                "name": "nyse",
-                "api_params": {"exchange": "nyse", "limit": "5000", "offset": "0"},
-            },
-        ]
+        self.exchanges = ["nasdaq", "nyse"]
 
     def setup_logging(self):
         """Configure logging for the downloader"""
@@ -72,19 +63,19 @@ class StockTickerDownloader:
         """Create output directories for each exchange and combined data"""
         try:
             for exchange in self.exchanges:
-                (self.output_dir / exchange.name).mkdir(parents=True, exist_ok=True)
+                (self.output_dir / exchange).mkdir(parents=True, exist_ok=True)
                 (self.output_dir / "all").mkdir(parents=True, exist_ok=True)
                 self.logger.info(f"Created output directories under {self.output_dir}")
         except Exception as e:
             self.logger.error(f"Failed to create directories: {e}")
             raise
 
-    def fetch_exchange_data(self, exchange_config: ExchangeConfig) -> Optional[Dict]:
+    def fetch_exchange_data(self, exchange_name: str) -> Optional[Dict]:
         """
         Fetch stock data for a specific exchange.
 
         Args:
-            exchange_config: Exchange configuration containing name and API parameters
+            exchange_name: Name of exchange ("nasdaq" or "nyse")
 
         Returns:
             JSON response data or None if request fails
@@ -94,8 +85,10 @@ class StockTickerDownloader:
             params = {
                 "tableonly": "true",
                 "download": "true",
-                **exchange_config.api_params,
+                "exchange": exchange_name,
             }
+
+            self.logger.info(f"Fetching data for {exchange_name} with params: {params}")
 
             # Make API request
             response = self.session.get(
@@ -106,13 +99,13 @@ class StockTickerDownloader:
             data = response.json()
             self.logger.info(
                 f"Successfully fetched {len(data.get('data', {}).get('rows', []))} "
-                f"tickers for {exchange_config.name}"
+                f"tickers for {exchange_name}"
             )
             return data
 
         except requests.exceptions.RequestException as e:
-            self.logger.error(f"Failed to fetch data for {exchange_config.name}: {e}")
+            self.logger.error(f"Failed to fetch data for {exchange_name}: {e}")
             return None
         except json.JSONDecodeError as e:
-            self.logger.error(f"Invalid JSON response for {exchange_config.name}: {e}")
+            self.logger.error(f"Invalid JSON response for {exchange_name}: {e}")
             return None
