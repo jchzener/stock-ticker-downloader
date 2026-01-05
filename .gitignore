@@ -1,2 +1,4 @@
 .venv
 .ipynb_checkpoints/
+.env
+stock_data/.DS_Store

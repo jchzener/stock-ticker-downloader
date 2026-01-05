@@ -1,9 +1,16 @@
+import os
 import json
 import logging
+from textwrap import indent
 from typing import Optional
 import requests
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
+NASDAQ_API_URL = os.getenv("NASDAQ_API_URL", "")
 
 
 class StockTickersDownloader:
@@ -42,3 +49,40 @@ class StockTickersDownloader:
     def _create_dirs(self):
         for exchange in self.exchanges + ["all"]:
             (self.output_dir / exchange).mkdir(parents=True, exist_ok=True)
+
+    def _fetch_data(self, exchange: str) -> dict:
+        try:
+            params = {"tableonly": "true", "download": "true", "exchange": exchange}
+            response = self.session.get(url=NASDAQ_API_URL, params=params, timeout=30)
+            data = response.json()
+            self.logger.info(
+                f"Succesfully fetched {len(data.get('data', {}).get('rows', []))} tickers for {exchange}"
+            )
+            return data
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"Failed to fetch data for {exchange}: {e}")
+            return {}
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Invalid JSON response for {exchange}: {e}")
+            return {}
+
+    def _save_files(self, exchange: str, data: dict):
+        exchange_dir = self.output_dir / exchange
+        rows = data.get("data", {}).get("rows", [])
+        tickers = [row.get("symbol") for row in rows]
+        # saving
+        (exchange_dir / f"{exchange}_full.json").write_text(json.dumps(rows, indent=2))
+        (exchange_dir / f"{exchange}_tickers.txt").write_text("\n".join(tickers))
+        self.logger.info(f"Saved {len(tickers)} for {exchange} in {self.output_dir}")
+
+    def _process_exchange(self, exchange: str) -> bool:
+        data = self._fetch_data(exchange)
+        if data:
+            self._save_files(exchange, data)
+            return True
+        else:
+            return False
+        
+    def _combine_all(self):
+        for exchange in self.exchanges:
+            if 
