@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from textwrap import indent
-from typing import Optional
+from typing import Dict, Optional
 import requests
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -50,7 +50,16 @@ class StockTickersDownloader:
         for exchange in self.exchanges + ["all"]:
             (self.output_dir / exchange).mkdir(parents=True, exist_ok=True)
 
-    def _fetch_data(self, exchange: str) -> dict:
+    def _fetch_data(self, exchange: str) -> Optional[Dict]:
+        """
+        Fetch stock data for a specific exchange.
+
+        Args:
+            exchange_name: Name of exchange ("nasdaq" or "nyse")
+
+        Returns:
+            JSON response data or None if request fails
+        """
         try:
             params = {"tableonly": "true", "download": "true", "exchange": exchange}
             response = self.session.get(url=NASDAQ_API_URL, params=params, timeout=30)
@@ -61,15 +70,25 @@ class StockTickersDownloader:
             return data
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Failed to fetch data for {exchange}: {e}")
-            return {}
+            return None
         except json.JSONDecodeError as e:
             self.logger.error(f"Invalid JSON response for {exchange}: {e}")
-            return {}
+            return None
+
+    def _extract_tickers(self, data: dict) -> list:
+        """Extract active stock tickers from API response data"""
+        try:
+            rows = data.get("data", {}).get("rows", [])
+            tickers = [row.get("symbol") for row in rows]
+            return tickers
+        except (KeyError, TypeError) as e:
+            self.logger.error(f"Error extracting tickers: {e}")
+            return []
 
     def _save_files(self, exchange: str, data: dict):
         exchange_dir = self.output_dir / exchange
         rows = data.get("data", {}).get("rows", [])
-        tickers = [row.get("symbol") for row in rows]
+        tickers = self._extract_tickers(data)
         # saving
         (exchange_dir / f"{exchange}_full.json").write_text(json.dumps(rows, indent=2))
         (exchange_dir / f"{exchange}_tickers.txt").write_text("\n".join(tickers))
@@ -94,3 +113,6 @@ class StockTickersDownloader:
             "\n".join(sorted(all_tickers))
         )
         self.logger.info("Combined and saved {len(all_tickers)} unique tickers")
+
+    def run(self, workers: int = 2) -> bool:
+        self._create_dirs()
