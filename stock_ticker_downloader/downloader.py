@@ -82,7 +82,15 @@ class StockTickersDownloader:
             return True
         else:
             return False
-        
+
     def _combine_all(self):
-        for exchange in self.exchanges:
-            if 
+        all_tickers = set()
+        for ex in self.exchanges:
+            file_name = self.output_dir / ex / f"{ex}_tickers.txt"
+            if file_name.exists():
+                all_tickers.update(file_name.read_text().strip().splitlines())
+
+        (self.output_dir / "all" / "all_tickers.txt").write_text(
+            "\n".join(sorted(all_tickers))
+        )
+        self.logger.info("Combined and saved {len(all_tickers)} unique tickers")
