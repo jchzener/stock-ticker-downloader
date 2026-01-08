@@ -75,24 +75,19 @@ class StockTickersDownloader:
             self.logger.error(f"Invalid JSON response for {exchange}: {e}")
             return None
 
-    def _extract_tickers(self, data: dict) -> list:
-        """Extract active stock tickers from API response data"""
-        try:
+    def _save_files(self, exchange: str, data: Optional[Dict]):
+        if data:
+            exchange_dir = self.output_dir / exchange
             rows = data.get("data", {}).get("rows", [])
             tickers = [row.get("symbol") for row in rows]
-            return tickers
-        except (KeyError, TypeError) as e:
-            self.logger.error(f"Error extracting tickers: {e}")
-            return []
-
-    def _save_files(self, exchange: str, data: dict):
-        exchange_dir = self.output_dir / exchange
-        rows = data.get("data", {}).get("rows", [])
-        tickers = self._extract_tickers(data)
-        # saving
-        (exchange_dir / f"{exchange}_full.json").write_text(json.dumps(rows, indent=2))
-        (exchange_dir / f"{exchange}_tickers.txt").write_text("\n".join(tickers))
-        self.logger.info(f"Saved {len(tickers)} for {exchange} in {self.output_dir}")
+            # saving
+            (exchange_dir / f"{exchange}_full.json").write_text(
+                json.dumps(rows, indent=2)
+            )
+            (exchange_dir / f"{exchange}_tickers.txt").write_text("\n".join(tickers))
+            self.logger.info(
+                f"Saved {len(tickers)} for {exchange} in {self.output_dir}"
+            )
 
     def _process_exchange(self, exchange: str) -> bool:
         data = self._fetch_data(exchange)
