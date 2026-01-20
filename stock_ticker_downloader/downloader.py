@@ -121,11 +121,12 @@ class StockTickerDownloader:
 
 
 def main():
-    if StockTickerDownloader().run():
+    if StockTickerDownloader(output_dir).run():
         print(f"Success!")
     else:
         exit(1)
 
 
 if __name__ == "__main__":
+    output_dir = "active_tickers"
     main()
