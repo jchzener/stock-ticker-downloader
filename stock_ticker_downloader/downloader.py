@@ -111,3 +111,10 @@ class StockTickersDownloader:
 
     def run(self, workers: int = 2) -> bool:
         self._create_dirs()
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            success_count = sum(executor.map(self._process_exchange, self.exchanges))
+        self.logger.info(f"Success: {success_count}/{len(self.exchanges)}")
+        if success_count:
+            self._combine_all()
+            return True
+        return False
