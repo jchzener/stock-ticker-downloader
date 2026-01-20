@@ -13,7 +13,7 @@ load_dotenv()
 NASDAQ_API_URL = os.getenv("NASDAQ_API_URL", "")
 
 
-class StockTickersDownloader:
+class StockTickerDownloader:
     """
     Download currently listed stock tickers on NASDAQ and NYSE
     Data is from 'https://api.nasdaq.com/api/screener/stocks'
@@ -118,3 +118,14 @@ class StockTickersDownloader:
             self._combine_all()
             return True
         return False
+
+
+def main():
+    if StockTickerDownloader().run():
+        print(f"Success!")
+    else:
+        exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -4,6 +4,6 @@ __version__ = "1.0.0"
 __author__ = "Your Name"
 __email__ = "jean@dpdil.tech"
 
-from .downloader import StockTickersDownloader
+from .downloader import StockTickerDownloader
 
-__all__ = ["StockTickersDownloader"]
+__all__ = ["StockTickerDownloader"]

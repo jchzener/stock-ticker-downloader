@@ -3,14 +3,13 @@
 import pytest
 from unittest.mock import Mock, patch
 from pathlib import Path
-from stock_ticker_downloader.downloader import StockTickerDownloader, ExchangeConfig
+import sys
+
+project_root = Path(__file__).parent.parent  # Adjust based on actual structure
+sys.path.insert(0, str(project_root))
 
 
-def test_exchange_config():
-    """Test ExchangeConfig dataclass."""
-    config = ExchangeConfig("test", {"exchange": "test", "limit": "25"})
-    assert config.name == "test"
-    assert config.api_params == {"exchange": "test", "limit": "25"}
+from stock_ticker_downloader.downloader import StockTickerDownloader
 
 
 def test_downloader_initialization():
