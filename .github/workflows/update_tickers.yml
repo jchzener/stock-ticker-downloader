@@ -1,16 +1,13 @@
 name: Update Stock Tickers Daily
 
-# Déclencheur : Ce workflow s'exécute tous les jours à 00:00 UTC
-# (Vous pouvez ajuster l'horaire selon vos besoins)
+# Triggered : every night at 00:00 UTC
 on:
   schedule:
-    # Utilisez un cron standard pour planifier l'exécution
-    # Cette ligne signifie : "À 00:00 (minuit) chaque jour"
-    - cron: "0 0 * * *"
-  # Permet également de déclencher manuellement le workflow depuis l'onglet "Actions" de GitHub
+    # Use cron for scheduling
+    - cron: "0 0 * * 1-5"
   workflow_dispatch:
 
-# Job : Ensemble de tâches à effectuer
+# Jobs to be run
 jobs:
   update-tickers:
     # Sur quelle machine virtuelle exécuter le job
@@ -35,8 +32,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt 
-          # or
           pip install requests
 
       # 4. Run the script
