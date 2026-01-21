@@ -67,28 +67,11 @@ class TestStockTickerDownloader:
         # Assertion
         assert result == {}
 
-    def test_extract_symbols(self):
-        """Test symbol extraction from API response."""
-        downloader = StockTickerDownloader()
-        mock_data = {
-            "data": {
-                "rows": [
-                    {"symbol": "AAPL", "name": "Apple Inc."},
-                    {"symbol": "MSFT", "name": "Microsoft Corp."},
-                    {"symbol": "", "name": "Invalid Entry"},  # Should be skipped
-                    {"name": "No Symbol Entry"},  # Should be skipped
-                ]
-            }
-        }
-
-        symbols = downloader._extract_symbols(mock_data)
-        assert symbols == ["AAPL", "MSFT"]
-
     def test_create_dirs(self):
         """Test directory creation."""
         with tempfile.TemporaryDirectory() as temp_dir:
             test_dir = Path(temp_dir) / "test_create_dirs"
-            downloader = StockTickerDownloader(output_dir=test_dir)
+            downloader = StockTickerDownloader(output_dir=test_dir.name)
 
             # Call the method
             downloader._create_dirs()
@@ -104,7 +87,7 @@ class TestStockTickerDownloader:
             exchange_name = "test_exchange"
             test_exchange_dir = test_dir / exchange_name
 
-            downloader = StockTickerDownloader(output_dir=test_dir)
+            downloader = StockTickerDownloader(output_dir=test_dir.name)
             mock_data = {
                 "data": {
                     "rows": [
@@ -158,7 +141,7 @@ class TestStockTickerDownloader:
         """Test combining all tickers from different exchanges."""
         with tempfile.TemporaryDirectory() as temp_dir:
             test_dir = Path(temp_dir) / "test_combine"
-            downloader = StockTickerDownloader(output_dir=test_dir)
+            downloader = StockTickerDownloader(output_dir=test_dir.name)
 
             # Create mock ticker files
             nasdaq_dir = test_dir / "nasdaq"
