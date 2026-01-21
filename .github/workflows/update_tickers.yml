@@ -1,56 +1,48 @@
 name: Update Stock Tickers Daily
 
-# Triggered : every night at 00:00 UTC
 on:
   schedule:
-    # Use cron for scheduling
-    - cron: "0 0 * * 1-5"
-  workflow_dispatch:
+    - cron: '0 0 * * *'  # Runs daily at 00:00 UTC
+  workflow_dispatch: # Allows manual trigger
 
-# Jobs to be run
 jobs:
   update-tickers:
-    # Sur quelle machine virtuelle exécuter le job
     runs-on: ubuntu-latest
 
-    # J0B
+    # Define environment variables accessible to steps
+    env:
+      NASDAQ_API_URL: ${{ secrets.NASDAQ_API_URL }} # Pass the secret as an environment variable
+
     steps:
-      # 1. Code
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Ceci est crucial : permet de pousser les changements ensuite
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Python run time env
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.9.12"
+          python-version: '3.9.12'
 
-      # 3. pip install
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests
+          pip install requests 
 
-      # 4. Run the script
       - name: Run Stock Ticker Downloader
         run: |
           python -m stock_ticker_downloader.downloader
+        # The script will now read the NASDAQ_API_URL from the environment
 
-      # 5.push on the repo
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          # Ajoute tous les fichiers modifiés dans le répertoire active_tickers/
-          git add active_tickers/
-          # check modifications
-          if git diff --staged --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "Automated update: Refresh stock tickers [skip ci]" # [skip ci] prevent infinite loop
+          git add stock_data/
+          if ! git diff --staged --quiet; then
+            git commit -m "Automated update: Refresh stock tickers [skip ci]"
             git push
             echo "Changes committed and pushed."
+          else
+            echo "No changes to commit."
           fi
