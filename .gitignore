@@ -13,7 +13,8 @@ MANIFEST
 .hypothesis/
 .pytest_cache/
 cover/
-
+tests/__pycache__/
+stock_ticker_downloader/__pycache__/
 # Jupyter Notebook
 .ipynb_checkpoints
 
